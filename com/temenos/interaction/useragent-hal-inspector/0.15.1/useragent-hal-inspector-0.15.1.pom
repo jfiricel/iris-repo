@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.temenos.interaction</groupId>
+    <artifactId>interaction-parent</artifactId>
+    <version>0.15.1</version>
+    <relativePath>../../interaction-parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>useragent-hal-inspector</artifactId>
+  <packaging>jar</packaging>
+  <name>useragent-hal-inspector</name>
+  <url>http://www.temenos.com</url>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/webapp</directory>
+      </resource>
+    </resources>
+  </build>
+
+</project>

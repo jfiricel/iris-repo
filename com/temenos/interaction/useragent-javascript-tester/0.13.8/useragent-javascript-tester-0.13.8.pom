@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<!-- All the complexity here is to get the dependency javascript files into the WAR file (maven assumes
+     that dependencies are code that needs to go into WEB-INF/lib).
+
+     First, two steps are put into the "generate-resources" lifecycle phase to unpack the dependency
+     jars and extract the javascript files, then a webResources is added to the default maven-war-plugin
+     configuration to add the extracted files to the .war file
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.temenos.interaction</groupId>
+    <artifactId>interaction-parent</artifactId>
+    <version>0.13.8</version>
+    <relativePath>../../interaction-parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>useragent-javascript-tester</artifactId>
+  <packaging>war</packaging>
+  <name>useragent-javascript-tester</name>
+  <url>http://www.temenos.com</url>
+  
+  <build>
+
+    <plugins>
+<!-- Manual step 1: unpack the dependencies to grab the js files -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.8</version>
+        <executions>
+          <execution>
+            <id>unpack-dependencies</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <configuration>
+              <includes>**/*.js</includes>
+              <outputDirectory>${project.build.directory}/3rdparty</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+<!-- Manual step 2: use ANT to dump the js files into a single "extra-js" directory.
+     If I wanted to have a more directory structure, this is where it would be created. 
+     As it is, it's simpler to just drop all the js files into the root of the WAR.
+     (the "flatten" attribute on the copy makes that easy).
+  -->
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <configuration>
+              <target>
+                <copy todir="target/extra-js" flatten="true">
+                  <files includes="${project.build.directory}/3rdparty/**/*.js"/>
+                </copy>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+<!-- WebResources to tell the maven war packager to include the "extra-js" directory in the output -->
+<!-- packagingExcludes to force it to drop the dependency jar files from WEB-INF/lib -->
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.4</version>
+	<configuration>
+	  <webResources> 
+	    <resource>
+	      <directory>${project.build.directory}/extra-js</directory> 
+	      <targetPath>/</targetPath> 
+	      <includes>
+		<include>*.js</include> 
+	      </includes>
+	    </resource>
+	  </webResources>
+          <packagingExcludes>WEB-INF/lib/vkbeautify*.jar,WEB-INF/lib/jquery*.jar</packagingExcludes>
+
+	</configuration>
+      </plugin>
+
+    </plugins>
+    <pluginManagement>
+    	<plugins>
+    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+    		<plugin>
+    			<groupId>org.eclipse.m2e</groupId>
+    			<artifactId>lifecycle-mapping</artifactId>
+    			<version>1.0.0</version>
+    			<configuration>
+    				<lifecycleMappingMetadata>
+    					<pluginExecutions>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>
+    									org.apache.maven.plugins
+    								</groupId>
+    								<artifactId>
+    									maven-antrun-plugin
+    								</artifactId>
+    								<versionRange>[1.7,)</versionRange>
+    								<goals>
+    									<goal>run</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>
+    									org.apache.maven.plugins
+    								</groupId>
+    								<artifactId>
+    									maven-dependency-plugin
+    								</artifactId>
+    								<versionRange>[2.8,)</versionRange>
+    								<goals>
+    									<goal>unpack-dependencies</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    					</pluginExecutions>
+    				</lifecycleMappingMetadata>
+    			</configuration>
+    		</plugin>
+    	</plugins>
+    </pluginManagement>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>jquery</artifactId>
+      <version>1.6.2</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>vkbeautify</artifactId>
+      <version>0.99.00.beta</version>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+</project>

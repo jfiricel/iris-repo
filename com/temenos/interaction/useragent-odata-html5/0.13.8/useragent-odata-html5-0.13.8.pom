@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.temenos.interaction</groupId>
+    <artifactId>interaction-parent</artifactId>
+    <version>0.13.8</version>
+    <relativePath>../../interaction-parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>useragent-odata-html5</artifactId>
+  <packaging>jar</packaging>
+  <name>useragent-odata-html5</name>
+  <url>http://www.temenos.com</url>
+	
+	<build>
+	    <resources>
+			<resource>
+				<directory>src/main/webapp</directory>
+			</resource>
+		</resources>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+</project>

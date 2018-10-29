@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <plugins>
+    <plugin>
+      <name>interaction-sdk-rim-plugin Maven Mojo</name>
+      <prefix>interaction-sdk-rim</prefix>
+      <artifactId>interaction-sdk-rim-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <name>interaction-sdk-plugin Maven Mojo</name>
+      <prefix>interaction-sdk</prefix>
+      <artifactId>interaction-sdk-plugin</artifactId>
+    </plugin>
+  </plugins>
+</metadata>

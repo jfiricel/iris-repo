@@ -1,0 +1,211 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.temenos.interaction</groupId>
+		<artifactId>interaction-parent</artifactId>
+		<version>0.15.1</version>
+		<relativePath>../interaction-parent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>interaction-media-xhtml</artifactId>
+	<packaging>jar</packaging>
+	<name>interaction-media-xhtml</name>
+
+	<distributionManagement>
+		<site>
+			<id>interaction-media-xhtml</id>
+			<url>file://localhost/c:/temp/iris/site/interaction-media-xhtml</url>
+		</site>
+	</distributionManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<locales>en</locales>
+					<reportPlugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-project-info-reports-plugin</artifactId>
+							<version>2.4</version>
+							<configuration>
+								<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+								<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+							</configuration>
+							<reports>
+								<report>index</report>
+								<report>dependencies</report>
+								<report>scm</report>
+							</reports>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-javadoc-plugin</artifactId>
+							<version>2.8</version>
+						</plugin>
+					</reportPlugins>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+        </dependency>
+
+        <!-- This provider can also accept and transform OEntity objects into HAL -->
+        <dependency>
+            <groupId>org.odata4j</groupId>
+            <artifactId>odata4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>com.temenos.interaction</groupId>
+			<artifactId>interaction-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+ 		<!-- TEST DEPENDENCIES -->
+        <dependency>
+            <groupId>org.apache.wink</groupId>
+            <artifactId>wink-common</artifactId>
+			<scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<scope>test</scope>
+		</dependency>
+                <dependency>
+                    <groupId>xmlunit</groupId>
+                    <artifactId>xmlunit</artifactId>
+                    <version>1.6</version>
+                    <scope>test</scope>
+                </dependency>
+	</dependencies>
+
+    <repositories>
+        <!-- The cambridge-core dependency is not in maven central repo -->
+		<repository>
+			<id>temenos-snapshot-repository</id>
+			<url>http://repository-temenostech.forge.cloudbees.com/snapshot/</url>
+<!--
+			<url>https://repository.temenos.com/snapshot/</url>
+-->
+		</repository>
+    </repositories>
+	<!-- SONAR TEST COVERAGE PROFILE-->
+   <profiles>
+    <profile>
+        <id>coverage</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.13</version>
+                    <configuration>
+                        <argLine>${jacoco.agent.ut.arg}</argLine>
+                        <!-- Specific to generate mapping between tests and covered code -->
+                        <properties>
+                            <property>
+                                <name>listener</name>
+                                <value>org.sonar.java.jacoco.JUnitListener</value>
+                            </property>
+                        </properties>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.16</version>
+                    <configuration>
+                        <argLine>-Xmx1024m -XX:MaxPermSize=256m ${jacoco.agent.it.arg}</argLine>
+                        <!-- Specific to generate mapping between tests and covered code -->
+                        <properties>
+                            <property>
+                                <name>listener</name>
+                                <value>org.sonar.java.jacoco.JUnitListener</value>
+                            </property>
+                        </properties>
+                        <!-- Let's put failsafe reports with surefire to have access to tests failures/success reports in sonar -->
+                        <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.version}</version>
+                    <executions>
+                        <!-- Prepares a variable, jacoco.agent.ut.arg, that contains the info to be passed to the JVM hosting the code
+being tested. -->
+                        <execution>
+                            <id>prepare-ut-agent</id>
+                            <phase>process-test-classes</phase>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                            <configuration>
+                                <destFile>${sonar.jacoco.reportPath}</destFile>
+                                <propertyName>jacoco.agent.ut.arg</propertyName>
+                                <append>true</append>
+                            </configuration>
+                        </execution>
+                        <!-- Prepares a variable, jacoco.agent.it.arg, that contains the info to be passed to the JVM hosting the code
+being tested. -->
+                        <execution>
+                            <id>prepare-it-agent</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                            <configuration>
+                                <destFile>${sonar.jacoco.itReportPath}</destFile>
+                                <propertyName>jacoco.agent.it.arg</propertyName>
+                                <append>true</append>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
+        <dependencies>
+            <dependency>
+                <groupId>org.codehaus.sonar-plugins.java</groupId>
+                <artifactId>sonar-jacoco-listeners</artifactId>
+                <version>${sonar-jacoco-listeners.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.sonar-plugins.java</groupId>
+                <artifactId>sonar-jacoco-plugin</artifactId>
+                <version>${sonar-jacoco-plugin.version}</version>
+            </dependency>
+        </dependencies>
+    </profile>
+</profiles>
+</project>

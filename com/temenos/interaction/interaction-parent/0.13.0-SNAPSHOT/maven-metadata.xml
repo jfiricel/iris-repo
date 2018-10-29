@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>com.temenos.interaction</groupId>
+  <artifactId>interaction-parent</artifactId>
+  <version>0.13.0-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20170310.154505</timestamp>
+      <buildNumber>2</buildNumber>
+    </snapshot>
+    <lastUpdated>20170310154505</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>0.13.0-20170310.154505-2</value>
+        <updated>20170310154505</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>

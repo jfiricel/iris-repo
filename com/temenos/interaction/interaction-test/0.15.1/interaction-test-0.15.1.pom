@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>interaction-parent</artifactId>
+    <groupId>com.temenos.interaction</groupId>
+    <version>0.15.1</version>
+    <relativePath>../interaction-parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>interaction-test</artifactId>
+  <name>interaction-test</name>
+  <description>This library supports our integration test execution.</description>
+  
+    <dependencies>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>jsr311-api</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>com.theoryinpractise</groupId>
+            <artifactId>halbuilder-standard</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.odata4j</groupId>
+            <artifactId>odata4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.odata4j</groupId>
+            <artifactId>odata4j-cxf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.odata4j</groupId>
+            <artifactId>odata4j-jersey</artifactId>
+        </dependency>
+        <dependency>
+        	<groupId>org.slf4j</groupId>
+        	<artifactId>slf4j-api</artifactId>
+        </dependency>
+    </dependencies>
+</project>
